@@ -18,6 +18,23 @@ const messageHandler = {
   }
 };
 
+function interpretCamera() {
+  console.log("Interpretting camera...");
+}
+
+function motionHandler() {
+  let enabled = true;
+
+  if (enabled) {
+    interpretCamera();
+
+    enabled = false;
+    setTimeout(() => {
+      enabled = true;
+    }, 15 * 1000);
+  }
+}
+
 function initialise() {
   // Subscribe to MQTT topic
   mqtt.subscribe(config.mqtt.topic, messageHandler);
@@ -39,6 +56,9 @@ function initialise() {
       })
       .catch(console.error);
   });
+
+  // When motion detected, interpret camera image
+  hardware.motionSensor.on("motionstart", motionHandler);
 }
 
 hardware.board.on("ready", initialise);
