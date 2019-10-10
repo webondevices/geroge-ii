@@ -1,5 +1,8 @@
+const five = require("johnny-five");
 const config = require("./config");
 const mqtt = require("./services/mqtt");
+
+const board = new five.Board();
 
 const messageHandler = {
   interpretSurroundings: () => {
@@ -21,4 +24,4 @@ function initialise() {
   mqtt.subscribe(config.mqtt.topic, messageHandler);
 }
 
-initialise();
+board.on("ready", initialise);
