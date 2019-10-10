@@ -2,7 +2,7 @@
   "name": "geroge-ii",
   "version": "0.0.1",
   "description": "Smart Talking Plant",
-  "main": "index.js",
+  "main": "george.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/webondevices/geroge-ii/issues"
   },
-  "homepage": "https://github.com/webondevices/geroge-ii#readme"
+  "homepage": "https://github.com/webondevices/geroge-ii#readme",
+  "dependencies": {
+    "aws-iot-device-sdk": "^2.2.1"
+  }
 }
