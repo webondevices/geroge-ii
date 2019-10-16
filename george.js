@@ -23,11 +23,17 @@ const messageHandler = {
 async function interpretCamera() {
   try {
     const imageFile = await camera.captureImage(config.imageSettings);
-    const person = await rekognition.findPerson(imageFile);
+    const { ExternalImageId: name } = await rekognition.findPerson(imageFile);
+    const facialFeatures = await rekognition.getFacialFeatures(imageFile);
+    const { age, gender, emotion } = rekognition.processFacialFeatures(
+      facialFeatures
+    );
 
-    console.log("hello ", person.ExternalImageId);
+    console.log(
+      `Hello ${name}! You look ${emotion}, you are a ${gender} and you look to be ${age} years old.`
+    );
   } catch (error) {
-    console.log("I was unable to find a person. ", error);
+    console.log("Unable to find a person. ", error);
   }
 }
 

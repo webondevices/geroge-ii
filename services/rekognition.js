@@ -26,11 +26,58 @@ function findPerson(imagePath) {
         }
       })
       .catch(error => {
-        reject("Error when processing image.");
+        reject(`Error when processing image. ${error}`);
       });
   });
 }
 
+function getFacialFeatures(imagePath) {
+  const bitmap = fs.readFileSync(imagePath);
+
+  return new Promise((resolve, reject) => {
+    rekognition
+      .detectFaces({
+        Image: {
+          Bytes: bitmap
+        },
+        Attributes: ["ALL"]
+      })
+      .promise()
+      .then(result => {
+        if (result.hasOwnProperty("FaceDetails")) {
+          resolve(result.FaceDetails[0]);
+        } else {
+          reject("No faces found in image.");
+        }
+      })
+      .catch(error => {
+        reject(`Error when processing image. ${error}`);
+      });
+  });
+}
+
+function getStrongestEmotion(emotionsArray) {
+  const confidences = emotionsArray.map(emotion => emotion.Confidence);
+  const highestConfidence = Math.max(...confidences);
+  const strongestEmotion = emotionsArray.find(
+    emotion => emotion.Confidence === highestConfidence
+  );
+
+  return strongestEmotion.Type;
+}
+
+function processFacialFeatures(facialFeatures) {
+  return {
+    age: parseInt(
+      (facialFeatures.AgeRange.Low + facialFeatures.AgeRange.High) / 2
+    ),
+    gender: facialFeatures.Gender.Value.toLowerCase(),
+    emotion: getStrongestEmotion(facialFeatures.Emotions)
+  };
+}
+
 module.exports = {
-  findPerson
+  findPerson,
+  getFacialFeatures,
+  processFacialFeatures
 };
