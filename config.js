@@ -2,12 +2,8 @@ module.exports = {
   rekognition: {
     collectionName: "FamilyFaces",
     region: "us-east-1",
-
-    // Face detection
     FaceMatchThreshold: 80,
     MaxFaces: 1,
-
-    // Label detection
     MaxLabels: 30,
     MinConfidence: 10
   },
@@ -26,11 +22,11 @@ module.exports = {
     userId: "user",
     contentType: "audio/l16; rate=16000; channels=1"
   },
-  get photo() {
+  get imageSettings() {
     return {
       size: "640x480",
       fileName: Date.now() + ".jpg",
-      environment: "pi"
+      environment: "mac"
     };
   },
   pins: {

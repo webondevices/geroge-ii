@@ -2,6 +2,8 @@ const config = require("./config");
 const mqtt = require("./services/mqtt");
 const hardware = require("./services/hardware");
 const lex = require("./services/lex");
+const camera = require("./services/camera");
+const rekognition = require("./services/rekognition");
 
 const messageHandler = {
   interpretSurroundings: () => {
@@ -18,8 +20,15 @@ const messageHandler = {
   }
 };
 
-function interpretCamera() {
-  console.log("Interpretting camera...");
+async function interpretCamera() {
+  try {
+    const imageFile = await camera.captureImage(config.imageSettings);
+    const person = await rekognition.findPerson(imageFile);
+
+    console.log("hello ", person.ExternalImageId);
+  } catch (error) {
+    console.log("I was unable to find a person. ", error);
+  }
 }
 
 function motionHandler() {
