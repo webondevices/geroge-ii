@@ -72,7 +72,7 @@ function processFacialFeatures(facialFeatures) {
       (facialFeatures.AgeRange.Low + facialFeatures.AgeRange.High) / 2
     ),
     gender: facialFeatures.Gender.Value.toLowerCase(),
-    emotion: getStrongestEmotion(facialFeatures.Emotions)
+    emotion: getStrongestEmotion(facialFeatures.Emotions).toLowerCase()
   };
 }
 
