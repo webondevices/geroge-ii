@@ -1,10 +1,10 @@
 const deviceModule = require("aws-iot-device-sdk").device;
-const config = require("../config");
+const config = require("../config").mqtt;
 
 function handleNewMessage(topic, payload, messageHandler) {
   console.log("Message received:", topic, JSON.parse(payload));
 
-  if (topic === config.mqtt.topic) {
+  if (topic === config.topic) {
     const parsedLoad = JSON.parse(payload);
     const command = parsedLoad.command;
 
@@ -20,11 +20,11 @@ function handleNewMessage(topic, payload, messageHandler) {
 
 function subscribe(subscriptionTopic, messageHandler) {
   const device = deviceModule({
-    keyPath: config.mqtt.keyPath,
-    certPath: config.mqtt.certPath,
-    caPath: config.mqtt.caPath,
-    clientId: config.mqtt.clientId,
-    host: config.mqtt.host
+    keyPath: config.keyPath,
+    certPath: config.certPath,
+    caPath: config.caPath,
+    clientId: config.clientId,
+    host: config.host
   });
 
   device.subscribe(subscriptionTopic);
