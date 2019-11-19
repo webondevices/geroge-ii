@@ -6,6 +6,8 @@ const camera = require("./services/camera");
 const rekognition = require("./services/rekognition");
 const memory = require("./services/memory");
 const polly = require("./services/polly");
+const u = require("./services/utterances");
+const e = require("./services/error");
 
 async function interpretSensors() {
   const { temperature, moisture, light } = hardware;
@@ -13,40 +15,32 @@ async function interpretSensors() {
   try {
     // Temperature
     if (temperature < 16) {
-      await polly.speak("It's really cold in here!");
+      await polly.speak(u.complain.cold(temperature));
     }
 
     if (temperature > 21) {
-      await polly.speak(
-        `It's boiling hot in here! It's ${temperature} degrees.`
-      );
+      await polly.speak(u.complain.hot(temperature));
     }
 
     // Soil
     if (moisture > 40) {
-      await polly.speak("My soil is soaking wet! I don't need more water.");
+      await polly.speak(u.complain.wet());
     }
 
     if (moisture < 10) {
-      await polly.speak(
-        "My soil is really dry and I'm really thirsty. Can I have some water?"
-      );
+      await polly.speak(u.complain.dry());
     }
 
     // Light
     if (light < 60 && light > 30) {
-      await polly.speak(
-        "It's getting dark in here. Can you put me closer to the window?"
-      );
+      await polly.speak(u.complain.dim());
     }
 
     if (light <= 30) {
-      await polly.speak(
-        "It's really dark in here. Can you switch on the lights?"
-      );
+      await polly.speak(u.complain.dark());
     }
   } catch (error) {
-    console.error("Unable to speak.", error);
+    console.error(e.speak, error);
   }
 }
 
@@ -61,27 +55,27 @@ async function recallPerson(name) {
     const diffTime = Math.abs(now - personLastSeen.getTime());
     diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
   } catch (error) {
-    console.error("Unable to remember person.", error);
+    console.error(e.rememberPerson, error);
   }
 
   try {
     if (diffDays) {
       if (diffDays > 0) {
-        await polly.speak(`I haven't seen you in ${diffDays} days.`);
+        await polly.speak(u.say.notSeen);
       } else {
-        await polly.speak("I've already seen you today!");
+        await polly.speak(u.say.seen);
       }
     } else {
-      await polly.speak("I have never seen you before.");
+      await polly.speak(u.say.neverSeen);
     }
   } catch (error) {
-    console.error("Unable to speak.", error);
+    console.error(e.speak, error);
   }
 
   try {
     await memory.remember({ [memoryLocation]: Date.now() });
   } catch (error) {
-    console.error("Unable to save person in memory.", error);
+    console.error(e.savePerson, error);
   }
 }
 
@@ -99,7 +93,7 @@ async function findPersonOnCamera() {
     gender = processedFeatures.gender;
     emotion = processedFeatures.emotion;
   } catch (error) {
-    console.error("Unable to find a person.", error);
+    console.error(e.findPerson, error);
   }
 
   if (name) {
@@ -108,7 +102,7 @@ async function findPersonOnCamera() {
         `Hello ${name}! You look ${emotion}, you are a ${gender} and you look to be ${age} years old.`
       );
     } catch (error) {
-      console.error("Unable to speak.", error);
+      console.error(e.speak, error);
     }
 
     await recallPerson(name);
