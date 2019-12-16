@@ -12,12 +12,12 @@ async function captureImage(settings) {
     if (settings.environment === "pi") {
       command = `raspistill -o ${settings.fileName} --width ${
         sizes[0]
-      } --height ${sizes[1]} --timeout 500`;
+        } --height ${sizes[1]} --timeout 500`;
     }
 
     exec(command, error => {
       if (error) {
-        reject("Error when capturing image.", error);
+        reject("Error when capturing image. " + error);
       } else {
         resolve(settings.fileName);
       }

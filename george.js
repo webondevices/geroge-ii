@@ -9,9 +9,10 @@ const polly = require("./services/polly");
 const u = require("./services/utterances");
 const e = require("./services/error");
 
+let enabled = true;
+
 async function interpretSensors() {
   const { temperature, moisture, light } = hardware;
-
   try {
     // Temperature
     if (temperature < 16) {
@@ -46,11 +47,13 @@ async function interpretSensors() {
 
 async function recallPerson(name) {
   let memoryLocation, diffDays;
+  let remember = false;
 
   try {
     memoryLocation = `${name}-seen`;
     const now = Date.now();
     const dateMemory = await memory.recall(memoryLocation);
+    remember = true;
     const personLastSeen = new Date(dateMemory);
     const diffTime = Math.abs(now - personLastSeen.getTime());
     diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
@@ -59,14 +62,14 @@ async function recallPerson(name) {
   }
 
   try {
-    if (diffDays) {
+    if (remember) {
       if (diffDays > 0) {
-        await polly.speak(u.say.notSeen);
+        await polly.speak(u.say.notSeen(diffDays));
       } else {
-        await polly.speak(u.say.seen);
+        await polly.speak(u.say.seen());
       }
     } else {
-      await polly.speak(u.say.neverSeen);
+      await polly.speak(u.say.neverSeen());
     }
   } catch (error) {
     console.error(e.speak, error);
@@ -109,9 +112,7 @@ async function findPersonOnCamera() {
   }
 }
 
-function motionHandler() {
-  let enabled = true;
-
+async function motionHandler() {
   if (enabled) {
     await findPersonOnCamera();
     await interpretSensors();
@@ -148,7 +149,7 @@ async function initialise() {
   hardware.greenLed.on();
 
   // When button pressed, listen to commands
-  hardware.button.on("down", function() {
+  hardware.button.on("down", function () {
     hardware.redLed.blink(250);
     hardware.greenLed.off();
 

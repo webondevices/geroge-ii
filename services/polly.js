@@ -13,7 +13,7 @@ const speechFile = "speech.mp3";
 function playFile(resolve, reject) {
   player.play(`./${speechFile}`, error => {
     if (error) {
-      reject("Error playing response file.", error);
+      reject("Error playing response file. " + error);
     } else {
       resolve();
     }
@@ -30,13 +30,13 @@ async function speak(text) {
   return new Promise((resolve, reject) => {
     Polly.synthesizeSpeech(params, (error, data) => {
       if (error) {
-        reject("Error synthesizing speech.", error);
+        reject("Error synthesizing speech. " + error + " Text received: " + text);
       }
 
       if (data && data.AudioStream instanceof Buffer) {
         fs.writeFile(`./${speechFile}`, data.AudioStream, error => {
           if (error) {
-            reject("Error writing response file to disk.", error);
+            reject("Error writing response file to disk. " + error);
           }
           playFile(resolve, reject);
         });
