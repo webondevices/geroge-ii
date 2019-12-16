@@ -72,6 +72,12 @@ module.exports = {
         "I have never seen you before.",
         "This is the first I saw you.",
         "Hello stranger. Nice to meet you!"
-      ])
+      ]),
+    cantSee: () =>
+      random([
+        "Sorry! I can't see a person.",
+        "I'm sorry! I can't find a face to analyse.",
+        "Sorry! I'm unable to find a person to analyse."
+      ]),
   }
 };

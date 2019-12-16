@@ -112,6 +112,42 @@ async function findPersonOnCamera() {
   }
 }
 
+async function tellAge() {
+  try {
+    const imageFile = await camera.captureImage(config.imageSettings);
+    const facialFeatures = await rekognition.getFacialFeatures(imageFile);
+    const processedFeatures = rekognition.processFacialFeatures(facialFeatures);
+
+    await polly.speak(`Let me see. The youngest you could be is ${processedFeatures.ageLow} years old but ${processedFeatures.ageHigh} is also realistic. My guess is ${processedFeatures.age}!`);
+  } catch (error) {
+    await polly.speak(u.say.cantSee);
+  }
+}
+
+async function tellSex() {
+  try {
+    const imageFile = await camera.captureImage(config.imageSettings);
+    const facialFeatures = await rekognition.getFacialFeatures(imageFile);
+    const processedFeatures = rekognition.processFacialFeatures(facialFeatures);
+
+    await polly.speak(`I think you are a ${processedFeatures.gender}!`);
+  } catch (error) {
+    await polly.speak(u.say.cantSee);
+  }
+}
+
+async function tellMood() {
+  try {
+    const imageFile = await camera.captureImage(config.imageSettings);
+    const facialFeatures = await rekognition.getFacialFeatures(imageFile);
+    const processedFeatures = rekognition.processFacialFeatures(facialFeatures);
+
+    await polly.speak(`You look ${processedFeatures.emotion}!`);
+  } catch (error) {
+    await polly.speak(u.say.cantSee);
+  }
+}
+
 async function motionHandler() {
   if (enabled) {
     await findPersonOnCamera();
@@ -129,14 +165,14 @@ const messageHandler = {
   interpretSurroundings: () => {
     console.log("robot.interpretSurroundings()");
   },
-  tellAge: () => {
-    console.log("robot.tellAge()");
+  tellAge: async () => {
+    await tellAge();
   },
   tellSex: () => {
-    console.log("robot.tellSex()");
+    await tellSex();
   },
   tellMood: () => {
-    console.log("robot.tellMood()");
+    await tellMood();
   }
 };
 

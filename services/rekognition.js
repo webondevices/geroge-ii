@@ -71,6 +71,8 @@ function processFacialFeatures(facialFeatures) {
     age: parseInt(
       (facialFeatures.AgeRange.Low + facialFeatures.AgeRange.High) / 2
     ),
+    ageLow: facialFeatures.AgeRange.Low,
+    ageHigh: facialFeatures.AgeRange.High,
     gender: facialFeatures.Gender.Value.toLowerCase(),
     emotion: getStrongestEmotion(facialFeatures.Emotions).toLowerCase()
   };
