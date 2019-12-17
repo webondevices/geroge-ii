@@ -33,7 +33,34 @@ function recall(key) {
   });
 }
 
+async function getTimeLastSeenPerson(name) {
+  try {
+    const memoryLocation = `${name}-seen`;
+    const now = Date.now();
+    const dateMemory = await recall(memoryLocation);
+    const personLastSeen = new Date(dateMemory);
+    const diffTime = Math.abs(now - personLastSeen.getTime());
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays;
+  } catch (error) {
+    console.error(e.rememberPerson, error);
+    return false;
+  }
+};
+
+async function savePersonLastSeen(name) {
+  try {
+    const memoryLocation = `${name}-seen`;
+    return await remember({ [memoryLocation]: Date.now() });
+  } catch (error) {
+    console.error(e.savePerson, error);
+    return false;
+  }
+}
+
 module.exports = {
   remember,
-  recall
+  recall,
+  getTimeLastSeenPerson,
+  savePersonLastSeen
 };
