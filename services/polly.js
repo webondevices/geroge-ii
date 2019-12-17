@@ -5,7 +5,7 @@ const config = require("./../config");
 
 const Polly = new AWS.Polly({
   signatureVersion: "v4",
-  region: config.rekognition.region
+  region: config.rekognition.region,
 });
 
 const speechFile = "speech.mp3";
@@ -22,9 +22,10 @@ function playFile(resolve, reject) {
 
 async function speak(text) {
   let params = {
+    Engine: "neural",
     Text: text,
     OutputFormat: "mp3",
-    VoiceId: "Kimberly"
+    VoiceId: "Matthew"
   };
 
   return new Promise((resolve, reject) => {

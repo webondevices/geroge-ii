@@ -7,8 +7,8 @@ const polly = require("../services/polly");
 const u = require("../services/utterances");
 const e = require("../services/error");
 
-async function interpretSensors() {
-  const { temperature, moisture, light } = hardware;
+async function interpretTemperature(verbose) {
+  const { temperature } = hardware;
 
   if (temperature < 16) {
     await polly.speak(u.complain.cold(temperature));
@@ -18,13 +18,13 @@ async function interpretSensors() {
     await polly.speak(u.complain.hot(temperature));
   }
 
-  if (moisture > 40) {
-    await polly.speak(u.complain.wet());
+  if (temperature >= 16 && temperature <= 21 && verbose) {
+    await polly.speak(u.say.warm());
   }
+}
 
-  if (moisture < 10) {
-    await polly.speak(u.complain.dry());
-  }
+async function interpretLight(verbose) {
+  const { light } = hardware;
 
   if (light < 60 && light > 30) {
     await polly.speak(u.complain.dim());
@@ -33,6 +33,31 @@ async function interpretSensors() {
   if (light <= 30) {
     await polly.speak(u.complain.dark());
   }
+
+  if (light > 60 && verbose) {
+    await polly.speak(u.say.bright());
+  }
+}
+
+async function interpretSoil(verbose) {
+  const { moisture } = hardware;
+  if (moisture > 40) {
+    await polly.speak(u.complain.wet());
+  }
+
+  if (moisture < 10) {
+    await polly.speak(u.complain.dry());
+  }
+
+  if (moisture >= 10 && moisture <= 40 && verbose) {
+    await polly.speak(u.say.moist());
+  }
+}
+
+async function interpretSensors() {
+  interpretTemperature(false);
+  interpretLight(false);
+  interpretSoil(false);
 }
 
 async function findFacialFeaturesOnImage(imageFile) {
@@ -91,6 +116,9 @@ async function findAndGreetPerson() {
 }
 
 module.exports = {
+  interpretLight,
+  interpretSoil,
+  interpretTemperature,
   interpretSensors,
   recognisePersonOnPhoto,
   findFacialFeaturesOnImage,

@@ -56,6 +56,24 @@ function getFacialFeatures(imagePath) {
   });
 }
 
+function detectLabels(imagePath) {
+  const bitmap = fs.readFileSync(imagePath);
+
+  return new Promise((resolve, reject) => {
+    rekognition
+      .detectLabels({
+        Image: {
+          Bytes: bitmap
+        },
+        MaxLabels: config.MaxLabels,
+        MinConfidence: config.MinConfidence
+      })
+      .promise()
+      .then(resolve)
+      .catch(reject);
+  });
+}
+
 function getStrongestEmotion(emotionsArray) {
   const confidences = emotionsArray.map(emotion => emotion.Confidence);
   const highestConfidence = Math.max(...confidences);
@@ -81,5 +99,6 @@ function processFacialFeatures(facialFeatures) {
 module.exports = {
   findPerson,
   getFacialFeatures,
-  processFacialFeatures
+  processFacialFeatures,
+  detectLabels,
 };

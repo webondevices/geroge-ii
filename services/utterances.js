@@ -79,5 +79,23 @@ module.exports = {
         "I'm sorry! I can't find a face to analyse.",
         "Sorry! I'm unable to find a person to analyse."
       ]),
+    bright: () =>
+      random([
+        "It's nice and bright here!",
+        "There's plenty of light here!",
+        "I have enough light!"
+      ]),
+    warm: () =>
+      random([
+        "The temperature is just perfect!",
+        "The temperature is just right!",
+        "I'm happy with the temperature!"
+      ]),
+    moist: () =>
+      random([
+        "My soil is moist enough. I need no more water!",
+        "My soil is nice and moist. Thank you!",
+        "My soild is just perfect. I was watered recently!"
+      ]),
   }
 };

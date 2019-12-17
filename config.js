@@ -1,11 +1,14 @@
 module.exports = {
+  age: "6 months",
+  kind: "spider plant",
   rekognition: {
     collectionName: "FamilyFaces",
     region: "us-east-1",
     FaceMatchThreshold: 80,
     MaxFaces: 1,
     MaxLabels: 30,
-    MinConfidence: 10
+    MinConfidence: 10,
+    LabelsToSay: 3,
   },
   mqtt: {
     keyPath: "roppyTheRobot.private.key",
