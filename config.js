@@ -8,7 +8,9 @@ module.exports = {
     MaxFaces: 1,
     MaxLabels: 30,
     MinConfidence: 10,
-    LabelsToSay: 3,
+    labelsToSay: 3,
+    labelsToIgnore: ["person", "face", "head", "portrait", "photography", "man", "female", "woman", "child", "selfie"],
+    interestingLabels: ["water", "liquid", "bottle", "mug", "glass", "drink", "juice", "cup", "beverage"],
   },
   mqtt: {
     keyPath: "roppyTheRobot.private.key",
@@ -24,6 +26,11 @@ module.exports = {
     botName: "roppySmartRobot",
     userId: "user",
     contentType: "audio/l16; rate=16000; channels=1"
+  },
+  polly: {
+    Engine: "neural",
+    OutputFormat: "mp3",
+    VoiceId: "Matthew"
   },
   get imageSettings() {
     return {

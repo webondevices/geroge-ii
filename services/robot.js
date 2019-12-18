@@ -55,9 +55,9 @@ async function interpretSoil(verbose) {
 }
 
 async function interpretSensors() {
-  interpretTemperature(false);
-  interpretLight(false);
-  interpretSoil(false);
+  await interpretTemperature(false);
+  await interpretLight(false);
+  await interpretSoil(false);
 }
 
 async function findFacialFeaturesOnImage(imageFile) {
@@ -99,7 +99,7 @@ async function findAndGreetPerson() {
   }
 
   if (name) {
-    const lastSeenInDays = memory.getTimeLastSeenPerson(name);
+    const lastSeenInDays = await memory.getTimeLastSeenPerson(name);
 
     if (lastSeenInDays === false) {
       await polly.speak(u.say.neverSeen());

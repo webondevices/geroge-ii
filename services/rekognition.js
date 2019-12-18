@@ -56,6 +56,13 @@ function getFacialFeatures(imagePath) {
   });
 }
 
+function getImportantLabels(labels) {
+  const { labelsToIgnore, labelsToSay } = config;
+  const filteredLabels = labels.Labels.filter(label => !labelsToIgnore.includes(label.Name.toLowerCase())).slice(0, labelsToSay);
+  const lowercaseLabels = filteredLabels.map(l => l.Name.toLowerCase());
+  return lowercaseLabels;
+};
+
 function detectLabels(imagePath) {
   const bitmap = fs.readFileSync(imagePath);
 
@@ -100,5 +107,6 @@ module.exports = {
   findPerson,
   getFacialFeatures,
   processFacialFeatures,
+  getImportantLabels,
   detectLabels,
 };

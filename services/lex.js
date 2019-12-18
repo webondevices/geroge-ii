@@ -42,6 +42,7 @@ const sendRequest = function (resolve, reject) {
         if (data.dialogState !== FULFILLED) {
           listen();
         } else {
+          console.log("DONE!");
           resolve();
         }
       });

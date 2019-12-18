@@ -22,10 +22,8 @@ function playFile(resolve, reject) {
 
 async function speak(text) {
   let params = {
-    Engine: "neural",
     Text: text,
-    OutputFormat: "mp3",
-    VoiceId: "Matthew"
+    ...config.polly
   };
 
   return new Promise((resolve, reject) => {

@@ -1,6 +1,6 @@
 const five = require("johnny-five");
-const board = new five.Board();
 const config = require("../config").pins;
+const board = new five.Board();
 
 let button;
 let redLed;
@@ -16,38 +16,56 @@ let temperature = 0;
 let moisture = 0;
 let light = 0;
 
-function initialise() {
-  motionSensor = motionSensor || new five.Motion(config.motionSensor);
-  lightSensor =
-    lightSensor ||
-    new five.Sensor({
-      pin: config.lightSensor,
-      freq: 250
-    });
+let announced = false;
 
-  lightSensor.on("change", function() {
+function monitorWatering(watered) {
+  let lastMeasurement = 100;
+  const pauseAnnouncements = () => {
+    announced = true;
+    setTimeout(() => {
+      announced = false;
+    }, 30000);
+  };
+  setInterval(() => {
+    if (moisture - lastMeasurement > 5) {
+      if (!announced) {
+        watered();
+        pauseAnnouncements();
+      }
+    }
+    lastMeasurement = moisture;
+  }, 3000);
+}
+
+function initialise({ watered }) {
+  motionSensor = motionSensor || new five.Motion(config.motionSensor);
+  lightSensor = lightSensor || new five.Sensor({
+    pin: config.lightSensor,
+    freq: 1000
+  });
+
+  lightSensor.on("change", function () {
     light = this.scaleTo(100, 0);
   });
 
-  moistureSensor =
-    moistureSensor ||
-    new five.Sensor({
-      pin: config.moistureSensor,
-      freq: 250
-    });
+  moistureSensor = moistureSensor || new five.Sensor({
+    pin: config.moistureSensor,
+    freq: 1000
+  });
 
-  moistureSensor.on("change", function() {
+  moistureSensor.on("change", function () {
     moisture = this.scaleTo(100, 0);
   });
 
-  thermometer =
-    thermometer ||
-    new five.Thermometer({
-      pin: config.thermometer,
-      controller: "LM35"
-    });
+  monitorWatering(watered);
 
-  thermometer.on("data", function() {
+  thermometer = thermometer || new five.Thermometer({
+    pin: config.thermometer,
+    freq: 1000,
+    controller: "LM35"
+  });
+
+  thermometer.on("data", function () {
     temperature = this.C;
   });
 
