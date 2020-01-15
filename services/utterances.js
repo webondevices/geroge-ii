@@ -34,7 +34,7 @@ module.exports = {
         "My soil is soaking wet! I don't need more water.",
         "My soil is too wet.",
         "I have too much water in my pot.",
-        "I think you overwatered my. My soil is too wet.",
+        "I think you overwatered me. My soil is too wet.",
         "My soil has a bit too much water in it. Please put less water next time."
       ]),
     dim: () =>

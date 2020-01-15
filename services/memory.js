@@ -1,5 +1,6 @@
 const fs = require("fs-extra");
 const memoryFile = "./services/memory.json";
+const e = require("../services/error");
 
 function openMemory() {
   return new Promise((resolve, reject) => {
