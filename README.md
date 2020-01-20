@@ -1,5 +1,8 @@
 # George II
 
+Demo:
+(https://www.youtube.com/watch?v=U90M_kEJjVE)[https://www.youtube.com/watch?v=U90M_kEJjVE]
+
 How to install the project on Mac:
 
 - Install (Node.js)[https://nodejs.org/en/download/]
